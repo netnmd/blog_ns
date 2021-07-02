@@ -37,6 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 'rest_framework',
+    # 'djoser',
+    # 'rest_framework.authtoken',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'users_app'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +132,14 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# djoser
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
+AUTH_USER_MODEL = 'users_app.User'
+"some"
