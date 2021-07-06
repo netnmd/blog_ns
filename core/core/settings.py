@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from .config import email, app_code
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b^(yf56@)@y1)_=eovuv6or@+a=ja^4rn%8h^&p50+so0+9^wd'
+SECRET_KEY = 'django-insecure-b^(yf56@)@y1)_=eovuv6or@+a=ja^4rn%8h^&p50+so0+9^wdasdfasdfasdfwewr21xcz@$532'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,7 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-    'users_app'
+    'users_app',
+    'blog_app'
 ]
 
 MIDDLEWARE = [
@@ -87,6 +89,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'david_project',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'qwerty',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5432'
+    # }
 }
 
 
@@ -137,9 +147,74 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # djoser
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
+
 AUTH_USER_MODEL = 'users_app.User'
-"some"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = email
+EMAIL_HOST_PASSWORD = app_code
+EMAIL_USE_TLS = True
+
+DJOSER = {
+    "LOGIN_FIELD": "username",
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {},
+}
+
+"""
+create user POST
+http://127.0.0.1:8000/auth/users/
+body:
+username: "user1"
+password: "password"
+email: "email@gmail.com"
+
+login POST Create Token
+http://127.0.0.1:8000/auth/token/login/
+body:
+username: "user1"
+password: "password"
+
+user info GET
+http://127.0.0.1:8000/auth/users/me/
+headers:
+Authorization: Token user_token
+
+Change user info PATCH
+http://127.0.0.1:8000/auth/users/me/
+
+headers:
+Authorization: Token user_token
+body:
+email: "new_email"
+
+Logout/drop a token POST
+http://127.0.0.1:8000/auth/token/logout/
+
+headers:
+Authorization: Token user_token
+
+JWT
+http://127.0.0.1:8000/auth/jwt/create/
+
+Change user info PATCH
+http://127.0.0.1:8000/auth/users/me/
+headers:
+Authorization: JWT access_token
+body:
+email: "new_email"
+
+"""
